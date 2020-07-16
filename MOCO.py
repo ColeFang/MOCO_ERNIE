@@ -47,7 +47,7 @@ if __name__ == '__main__':
                         help='path to dataset')
     parser.add_argument('-j', '--workers', default=32, type=int, metavar='N',
                         help='number of data loading workers (default: 32)')
-    parser.add_argument('--epochs', default=50, type=int, metavar='N',
+    parser.add_argument('--epochs', default=100, type=int, metavar='N',
                         help='number of total epochs to run')
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                         help='manual epoch number (useful on restarts)')
@@ -56,7 +56,7 @@ if __name__ == '__main__':
                         help='mini-batch size (default: 256), this is the total '
                              'batch size of all GPUs on the current node when '
                              'using Data Parallel or Distributed Data Parallel')
-    parser.add_argument('--lr', '--learning-rate', default=0.00002, type=float,
+    parser.add_argument('--lr', '--learning-rate', default=0.002, type=float,
                         metavar='LR', help='initial learning rate', dest='lr')
     parser.add_argument('--schedule', default=[120, 160], nargs='*', type=int,
                         help='learning rate schedule (when to drop lr by 10x)')
@@ -168,6 +168,8 @@ if __name__ == '__main__':
             losses = []
             for step, d in enumerate(tqdm(train_ds.start(place), desc='training')):
                 sen_q, seg_q, sen_k, seg_k = d
+                #print(sen_q.shape)
+                #print(seg_q.shape)
                 loss = model(sen_q, seg_q, sen_k, seg_k)
                 loss.backward()
                 opt.minimize(loss)
